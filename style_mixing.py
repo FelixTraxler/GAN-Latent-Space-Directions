@@ -60,7 +60,7 @@ def generate_style_mix(
         --network=https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metfaces.pkl
     """
     print('Loading networks from "%s"...' % network_pkl)
-    device = torch.device('cuda')
+    device = torch.device('mps')
     with dnnlib.util.open_url(network_pkl) as f:
         G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
 
@@ -68,7 +68,7 @@ def generate_style_mix(
 
     print('Generating W vectors...')
     all_seeds = list(set(row_seeds + col_seeds))
-    all_z = np.stack([np.random.RandomState(seed).randn(G.z_dim) for seed in all_seeds])
+    all_z = np.stack([np.random.RandomState(seed).randn(G.z_dim) for seed in all_seeds]).astype(np.float32)
     all_w = G.mapping(torch.from_numpy(all_z).to(device), None)
     w_avg = G.mapping.w_avg
     all_w = w_avg + (all_w - w_avg) * truncation_psi

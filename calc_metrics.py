@@ -39,13 +39,13 @@ def subprocess_fn(rank, args, temp_dir):
             torch.distributed.init_process_group(backend='nccl', init_method=init_method, rank=rank, world_size=args.num_gpus)
 
     # Init torch_utils.
-    sync_device = torch.device('cuda', rank) if args.num_gpus > 1 else None
+    sync_device = torch.device('mps', rank) if args.num_gpus > 1 else None
     training_stats.init_multiprocessing(rank=rank, sync_device=sync_device)
     if rank != 0 or not args.verbose:
         custom_ops.verbosity = 'none'
 
     # Print network summary.
-    device = torch.device('cuda', rank)
+    device = torch.device('mps', rank)
     torch.backends.cudnn.benchmark = True
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False

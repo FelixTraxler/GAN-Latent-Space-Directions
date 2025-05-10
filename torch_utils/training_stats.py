@@ -43,7 +43,7 @@ def init_multiprocessing(rank, sync_device):
         rank:           Rank of the current process.
         sync_device:    PyTorch device to use for inter-process
                         communication, or None to disable multi-process
-                        collection. Typically `torch.device('cuda', rank)`.
+                        collection. Typically `torch.device('mps', rank)`.
     """
     global _rank, _sync_device
     assert not _sync_called
