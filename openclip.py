@@ -58,8 +58,8 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
 ###################### 256 oc2 ######################
 outdir = "out_bakk_256"
-seed_start  = 50000
-seed_end    = 60000
+seed_start  = 100000
+seed_end    = 700000
 
 text = tokenizer([
         "pose", "smile", "age", "gender", 
