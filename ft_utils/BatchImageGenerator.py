@@ -68,7 +68,7 @@ class BatchImageGenerator:
 
         np.save(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_zs.npy', z_numpy)
 
-        return self.generate_from_z_vectors(start_seed, batch_size, True, z)
+        return self.generate_from_z_vectors(start_seed, batch_size, False, z)
 
     def batch_performance_tests_until(self, max_batch_size: int):
         """

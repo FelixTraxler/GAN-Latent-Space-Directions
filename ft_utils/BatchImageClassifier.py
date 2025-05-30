@@ -1,0 +1,31 @@
+import torch
+from PIL import Image
+import open_clip
+import numpy as np
+
+from ft_utils.utils import batch_file_prefix, image_prefix
+
+class BatchImageClassifier():
+    def __init__(self, outdir):
+        self.model, _, self.preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+        self.model.eval()  # model in train mode by default, impacts some models with BatchNorm or stochastic depth active
+        self.tokenizer = open_clip.get_tokenizer('ViT-B-32')
+        self.outdir = outdir
+        return
+
+
+    def generate_image_features(self, start_seed, batch_size):
+        with torch.no_grad(), torch.autocast("mps"):
+            batch_features = []
+            file_prefix = batch_file_prefix(start_seed, batch_size, self.outdir)
+            for seed_idx, seed in enumerate(range(start_seed, start_seed + batch_size)):
+                output_path = image_prefix(seed, self.outdir)
+                image = self.preprocess(Image.open(output_path)).unsqueeze(0) # type: ignore
+                image_features = self.model.encode_image(image)
+                batch_features.append(image_features)
+            np.save(f'{file_prefix}_raw_image_features.npy', batch_features)
+            return batch_features[0]
+
+    def load_image_features(self, start_seed, batch_size):
+        file_prefix = batch_file_prefix(start_seed, batch_size, self.outdir)
+        return np.load(f'{file_prefix}_raw_image_features.npy')
