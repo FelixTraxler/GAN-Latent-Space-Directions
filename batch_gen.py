@@ -1,7 +1,7 @@
 #%%
 
-%load_ext autoreload # ignore
-%autoreload 2
+%load_ext autoreload # type: ignore
+%autoreload 2 # type: ignore
 
 #%%
 
