@@ -1,12 +1,12 @@
 import os
 
-import dnnlib
+from stylegan2_ada import dnnlib
 import numpy as np
 import PIL.Image
 import torch
 import time
 
-import legacy
+from stylegan2_ada import legacy
 
 class BatchImageGenerator:
     def __init__(self):

@@ -29,3 +29,22 @@ class BatchImageClassifier():
     def load_image_features(self, start_seed, batch_size):
         file_prefix = batch_file_prefix(start_seed, batch_size, self.outdir)
         return np.load(f'{file_prefix}_raw_image_features.npy')
+    
+    def tokenize_attributes(self, attributes):
+        with torch.no_grad(), torch.autocast("mps"):
+            text = self.tokenizer(attributes)
+            text_features = self.model.encode_text(text)
+            text_features /= text_features.norm(dim=-1, keepdim=True)
+            return text_features
+
+    def classify_from_batch(self, start_seed, batch_size, text_features):
+        with torch.no_grad(), torch.autocast("mps"):
+
+            imgs = self.load_image_features(start_seed, batch_size)
+
+            probabilities = []
+
+            for image_features in imgs:
+                image_features /= torch.from_numpy(image_features).norm(dim=-1, keepdim=True)
+                probabilities.append((100.0 * image_features @ text_features.T).softmax(dim=-1))
+        return probabilities

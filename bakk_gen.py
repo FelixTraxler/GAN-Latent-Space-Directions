@@ -13,12 +13,12 @@ import re
 from typing import List, Optional
 
 import click
-import dnnlib
+from stylegan2_ada import dnnlib
 import numpy as np
 import PIL.Image
 import torch
 
-import legacy
+from stylegan2_ada import legacy
 
 #----------------------------------------------------------------------------
 

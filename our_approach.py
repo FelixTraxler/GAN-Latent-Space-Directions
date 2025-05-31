@@ -91,12 +91,12 @@ import re
 from typing import List, Optional
 
 import click
-import dnnlib
+from stylegan2_ada import dnnlib
 import numpy as np
 import PIL.Image
 import torch
 
-import legacy
+from stylegan2_ada import legacy
 
 network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/paper-fig7c-training-set-sweeps/ffhq140k-paper256-ada-bcr.pkl"
 # 1024
