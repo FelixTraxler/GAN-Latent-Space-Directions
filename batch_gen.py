@@ -13,16 +13,16 @@ from ft_utils.utils import create_grid_from_batch, BATCH_SIZE, create_image_grid
 
 
 #%%
-batch_generator = BatchImageGenerator()
+batch_generator = BatchImageGenerator("out_batch_transfer", True)
 def gen_image_batch():
     """
     Generates images and latent vectors in batches of 64
     """
-    for i in tqdm(range(3439, round(1_000_000 / BATCH_SIZE))):
-        print(f"Iteration {i:05d}/{round(1_000_000 / BATCH_SIZE)} {i*BATCH_SIZE}")
+    for i in tqdm(range(0, round(100_000 / BATCH_SIZE))):
         batch_generator.generate_batch(BATCH_SIZE*i, BATCH_SIZE)
     
 # batch_generator.generate_batch(0, BATCH_SIZE)
+gen_image_batch()
 #%%
 # create_grid_from_batch(64*0, 64, "out_batch_transfer")
 

@@ -13,12 +13,13 @@ import time
 import legacy
 
 class BatchImageGenerator:
-    def __init__(self):
-        network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/paper-fig7c-training-set-sweeps/ffhq140k-paper256-ada-bcr.pkl"
-        # TRANSFER LEARNING:
-        # network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/transfer-learning-source-nets/ffhq-res256-mirror-paper256-noaug.pkl"
+    def __init__(self, outdir, transfer_learning):
+        if transfer_learning:
+            network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/transfer-learning-source-nets/ffhq-res256-mirror-paper256-noaug.pkl"
+        else:
+            network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/paper-fig7c-training-set-sweeps/ffhq140k-paper256-ada-bcr.pkl"
 
-        self.outdir = "out_batch"
+        self.outdir = outdir
         self.truncation_psi = 1
 
         print('Loading networks from "%s"...' % network_pkl)
@@ -61,7 +62,6 @@ class BatchImageGenerator:
         seeds = list(range(start_seed, start_seed + batch_size))
         
         for i, (seed, w_vector) in enumerate(zip(seeds, ws)):
-            print(w_vector.shape)
             # Perform inference on a single vector from the batch
             # Add a batch dimension to the w_vector for the synthesis network
             img = self.G.synthesis(w_vector.unsqueeze(0), noise_mode="const")
