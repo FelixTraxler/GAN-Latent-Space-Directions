@@ -46,5 +46,5 @@ class BatchImageClassifier():
 
             for image_features in imgs:
                 image_features /= torch.from_numpy(image_features).norm(dim=-1, keepdim=True)
-                probabilities.append((100.0 * image_features @ text_features.T).softmax(dim=-1))
+                probabilities.append((image_features @ text_features.T)) # .softmax(dim=-1))
         return probabilities

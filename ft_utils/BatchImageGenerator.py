@@ -1,16 +1,22 @@
 import os
 
-from stylegan2_ada import dnnlib
+import sys
+import os
+sys.path.append("stylegan2_ada")
+
+import dnnlib
 import numpy as np
 import PIL.Image
 import torch
 import time
 
-from stylegan2_ada import legacy
+import legacy
 
 class BatchImageGenerator:
     def __init__(self):
         network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/paper-fig7c-training-set-sweeps/ffhq140k-paper256-ada-bcr.pkl"
+        # TRANSFER LEARNING:
+        # network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/transfer-learning-source-nets/ffhq-res256-mirror-paper256-noaug.pkl"
 
         self.outdir = "out_batch"
         self.truncation_psi = 1
@@ -23,17 +29,27 @@ class BatchImageGenerator:
         self.label = torch.zeros([1, self.G.c_dim], device=self.device)
         os.makedirs(self.outdir, exist_ok=True)
 
+    def load_w_batch(self, start_seed, batch_size):
+        return np.load(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_ws.npy')
+
     def generate_from_z_batch(self, start_seed, batch_size, save_w):
         z_numpy = np.load(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_zs.npy')
         z = torch.from_numpy(z_numpy).to(self.device)
 
         return self.generate_from_z_vectors(start_seed, batch_size, save_w, z)
-    
+
     def generate_from_ws_batch(self, start_seed, batch_size):
-        ws_numpy = np.load(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_ws.npy')
+        ws_numpy = self.load_w_batch(start_seed, batch_size)
         ws = torch.from_numpy(ws_numpy[:, np.newaxis, :].repeat(14, axis=1)).to(self.device)
 
         return self.generate_from_w_vectors(start_seed, batch_size, ws)
+
+    def generate_from_w_vec(self, w_vector, filename):
+        img = self.G.synthesis(w_vector.unsqueeze(0), noise_mode="const")
+
+        # Post-process and save the image
+        img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
+        PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(filename)
 
     def generate_from_z_vectors(self, start_seed, batch_size, save, z):
         ws = self.G.mapping(z, self.label, truncation_psi=self.truncation_psi, truncation_cutoff=None)
@@ -45,6 +61,7 @@ class BatchImageGenerator:
         seeds = list(range(start_seed, start_seed + batch_size))
         
         for i, (seed, w_vector) in enumerate(zip(seeds, ws)):
+            print(w_vector.shape)
             # Perform inference on a single vector from the batch
             # Add a batch dimension to the w_vector for the synthesis network
             img = self.G.synthesis(w_vector.unsqueeze(0), noise_mode="const")

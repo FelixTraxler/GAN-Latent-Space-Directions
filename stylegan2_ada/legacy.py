@@ -12,9 +12,9 @@ import re
 import copy
 import numpy as np
 import torch
-from . import dnnlib
-from .torch_utils import misc
 
+import dnnlib
+from torch_utils import misc
 #----------------------------------------------------------------------------
 
 def load_network_pkl(f, force_fp16=False):

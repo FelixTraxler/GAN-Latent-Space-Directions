@@ -1,5 +1,7 @@
 from PIL import Image
 
+BATCH_SIZE = 64
+
 def batch_file_prefix(start_seed, batch_size, outdir):
     return f"{outdir}/batch_{start_seed:06d}-{batch_size:06d}"
 
