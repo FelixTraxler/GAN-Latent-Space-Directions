@@ -21,8 +21,8 @@ class InterfaceGAN():
         return self.__interfacegan__linear_interpolate(latent_code=latent_vector, boundary=self.__boundary, start_distance=0, steps=64)
 
     def latent_walk(self, attributes, latent_vector):
-        batch_classifier = BatchImageClassifier("out_batch")
-        batch_generator = BatchImageGenerator()
+        batch_classifier = BatchImageClassifier("out_batch_transfer")
+        batch_generator = BatchImageGenerator("out_batch_transfer", True)
 
         def classify_young(start_seed, batch_size, text):
             return batch_classifier.classify_from_batch(start_seed, batch_size, text)

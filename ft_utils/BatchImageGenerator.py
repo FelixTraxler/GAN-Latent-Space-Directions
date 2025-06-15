@@ -19,7 +19,7 @@ class BatchImageGenerator:
         else:
             network_pkl = "https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/paper-fig7c-training-set-sweeps/ffhq140k-paper256-ada-bcr.pkl"
 
-        self.outdir = outdir
+        self.outdir = "../" + outdir
         self.truncation_psi = 1
 
         print('Loading networks from "%s"...' % network_pkl)
@@ -38,6 +38,12 @@ class BatchImageGenerator:
         z = torch.from_numpy(z_numpy).to(self.device)
 
         return self.generate_from_z_vectors(start_seed, batch_size, save_w, z)
+
+    def generate_w_from_z_batch(self, start_seed, batch_size):
+        z_numpy = np.load(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_zs.npy')
+        z = torch.from_numpy(z_numpy).to(self.device)
+        ws = self.G.mapping(z, self.label, truncation_psi=self.truncation_psi, truncation_cutoff=None)
+        np.save(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_ws.npy', ws.cpu().numpy()[:,0,:])
 
     def generate_from_ws_batch(self, start_seed, batch_size):
         ws_numpy = self.load_w_batch(start_seed, batch_size)
@@ -85,7 +91,7 @@ class BatchImageGenerator:
 
         np.save(f'{self.outdir}/batch_{start_seed:06d}-{batch_size:06d}_zs.npy', z_numpy)
 
-        return self.generate_from_z_vectors(start_seed, batch_size, False, z)
+        return self.generate_from_z_vectors(start_seed, batch_size, True, z)
 
     def batch_performance_tests_until(self, max_batch_size: int):
         """
