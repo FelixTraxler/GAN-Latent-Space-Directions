@@ -48,3 +48,10 @@ class BatchImageClassifier():
                 image_features /= torch.from_numpy(image_features).norm(dim=-1, keepdim=True)
                 probabilities.append((image_features @ text_features.T)) # .softmax(dim=-1))
         return probabilities
+
+    def classify_image_vec(self, img, text_features):
+        img = self.preprocess(img).unsqueeze(0) # type: ignore
+        image_features = self.model.encode_image(img)
+        image_features /= image_features.norm(dim=-1, keepdim=True)
+        return image_features @ text_features.T
+

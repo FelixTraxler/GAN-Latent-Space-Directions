@@ -56,7 +56,10 @@ class BatchImageGenerator:
 
         # Post-process and save the image
         img = (img.permute(0, 2, 3, 1) * 127.5 + 128).clamp(0, 255).to(torch.uint8)
-        PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(filename)
+        img = PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB')
+        if (filename is not None):
+            img.save(filename)
+        return img
 
     def generate_from_z_vectors(self, start_seed, batch_size, save, z):
         ws = self.G.mapping(z, self.label, truncation_psi=self.truncation_psi, truncation_cutoff=None)

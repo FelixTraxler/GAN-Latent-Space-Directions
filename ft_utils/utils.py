@@ -55,3 +55,7 @@ def create_grid_from_batch(start_seed, batch_size, dir):
         current_seed = start_seed + i
         filenames.append(image_prefix(current_seed, dir))
     return create_image_grid(filenames)
+
+
+def diff_percentage(val1, val2):
+    return 100 * (val1 - val2) / val2

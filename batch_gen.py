@@ -122,10 +122,10 @@ from ft_utils.GaussianLatentWalker import GaussianLatentWalker
 
 glw = GaussianLatentWalker()
 
-lw2 = glw.walk_to_realistic_logpdf(["blonde"], first_seed_w_vector, percentile=0.999, strength=1.0)
+lw2 = glw.walk_by_logpdf_walk(["blonde"], first_seed_w_vector, percentile=99.9999)
 # %%
 
-ws2 = torch.from_numpy(lw2.astype(np.float32)[:, np.newaxis, :].repeat(14, axis=1)).to("mps")
+ws2 = torch.from_numpy(lw2[0].astype(np.float32)[:, np.newaxis, :].repeat(14, axis=1)).to("mps")
 
 paths = []
 for (index, lv) in enumerate(ws2):

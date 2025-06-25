@@ -1,3 +1,0 @@
-{
-  "python.analysis.extraPaths": ["./stylegan2-ada", "./stylegan2_ada"]
-}
