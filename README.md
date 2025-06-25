@@ -19,19 +19,20 @@ This project analyzes and compares techniques for walking in semantic directions
 
 ## Code Structure
 
-| Path / File                        | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| `batch_gen.py`                     | Main script for batch image generation and classification.                 |
-| `bakk_gen.py`                      | Script for generating images and saving latent vectors with StyleGAN2-ADA. |
-| `openclip.py`                      | Scripts for extracting OpenCLIP features and classifying images.           |
-| `our_approach.py`                  | Implementation and experiments for the new latent walk technique.          |
-| `results/`                         | Example output images and result visualizations.                           |
-| `ft_utils/BatchImageGenerator.py`  | Class for batch image and latent vector generation using StyleGAN2-ADA.    |
-| `ft_utils/BatchImageClassifier.py` | Class for batch classification of images using OpenCLIP.                   |
-| `ft_utils/InterfaceGAN.py`         | Implementation of the InterfaceGAN method for finding semantic directions. |
-| `ft_utils/utils.py`                | Utility functions for batching, file naming, and image grid creation.      |
-| `interfacegan/`                    | Original InterfaceGAN code and pretrained boundaries for reference.        |
-| `stylegan2_ada/`                   | StyleGAN2-ADA code (imported as a submodule or local copy).                |
+| Path / File                                         | Description                                                                                    |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `pipeline.ipynb`                                    | MAIN: Pipeline for scoring different approaches; expects sample image gen/class to be finished |
+| `batch_gen.py`                                      | Main script for batch image generation and classification.                                     |
+| `bakk_gen.py`                                       | DEPRECATED: Script for generating images and saving latent vectors with StyleGAN2-ADA.         |
+| `openclip.py`                                       | Scripts for extracting OpenCLIP features and classifying images.                               |
+| `our_approach.py`                                   | Implementation and experiments for the new latent walk technique.                              |
+| `results/`                                          | Example output images and result visualizations.                                               |
+| `ft_utils/BatchImageGenerator.py`                   | Class for batch image and latent vector generation using StyleGAN2-ADA.                        |
+| `ft_utils/BatchImageClassifier.py`                  | Class for batch classification of images using OpenCLIP.                                       |
+| `ft_utils/[Gaussian/Average/InterfaceGAN]Method.py` | Implementation of the a method for finding semantic directions.                                |
+| `ft_utils/utils.py`                                 | Utility functions for batching, file naming, and image grid creation.                          |
+| `interfacegan/`                                     | Original InterfaceGAN code and pretrained boundaries for reference.                            |
+| `stylegan2_ada/`                                    | StyleGAN2-ADA code (imported as a submodule or local copy).                                    |
 
 ## Techniques
 
